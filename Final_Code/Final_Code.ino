@@ -73,14 +73,22 @@ void IsOk() {
 
 float Temp() {
   float temp1, temp2, temp3, temp4, temp5, avgTemp;
-  // call sensors.requestTemperatures() to issue a global temperature
-  // request to all devices on the bus
+  int devCount, devCountAdj;
+  
+  
   sensors.requestTemperatures(); // Send the command to get temperatures
-  temp1 = sensors.getTempCByIndex(0);//Using sensor library read the temperature from the first sensor on the bus
-  temp2 = sensors.getTempCByIndex(1);//Using sensor library read the temperature from the second sensor on the bus
-  temp3 = sensors.getTempCByIndex(2);//Using sensor library read the temperature from the third sensor on the bus
-  temp4 = sensors.getTempCByIndex(3);//Using sensor library read the temperature from the fourth sensor on the bus
-  temp5 = sensors.getTempCByIndex(4);//Using sensor library read the temperature from the fifth sensor on the bus
+  devCount=sensors.getDeviceCount();
+  devCountAdj=devCount;
+  float temp[devCount];
+  
+  for(int j=1;j<=devCount;j++){
+  temp[j]=sensors.getTempCByIndex(j);
+  }
+  //temp1 = sensors.getTempCByIndex(0);//Using sensor library read the temperature from the first sensor on the bus
+  //temp2 = sensors.getTempCByIndex(1);//Using sensor library read the temperature from the second sensor on the bus
+  //temp3 = sensors.getTempCByIndex(2);//Using sensor library read the temperature from the third sensor on the bus
+  //temp4 = sensors.getTempCByIndex(3);//Using sensor library read the temperature from the fourth sensor on the bus
+  //temp5 = sensors.getTempCByIndex(4);//Using sensor library read the temperature from the fifth sensor on the bus
   /*Serial.print("Temperature 1 is: ");
     Serial.println(temp1);
     Serial.print("Temperature 2 is: ");
@@ -91,10 +99,18 @@ float Temp() {
     Serial.println(temp4);
     Serial.print("Temperature 5 is: ");
     Serial.println(temp5);*/
-  avgTemp = temp1 + temp2 + temp3 + temp4 + temp5;
-  avgTemp = avgTemp / 5;
+  for (int j = 1;j<=devCount;j++){
+    if(temp[j]>0){
+    avgTemp += temp[j];}
+    else{
+      devCountAdj--;
+    }
+  }
+  avgTemp = avgTemp / devCountAdj;
+  
   Serial.print("Temperature Average is: ");
   Serial.println(avgTemp);
+  
   //Serial.print("Device Count is: ");
   //Serial.println(sensors.getDeviceCount());
   Display(avgTemp);
@@ -172,9 +188,7 @@ void settingHighResolutionDuty()
     //setting the duty to 50% with 8 bit pwm. 128 is 1/2 of 256
     pwmWrite(ckt, 128);
     //Serial.println("8-Bit PWM");
-    //delay(1000);
-    i++;
-    //Serial.println(i);
+
     //setting the duty to 50% with the highest possible resolution that
     //can be applied to the timer (up to 16 bit). 1/2 of 65536 is 32768.
     //pwmWriteHR(ckt, 32768);
@@ -185,7 +199,7 @@ void settingHighResolutionDuty()
       IsOk();
       if((digitalRead(TimePin)==HIGH&&SetTime==1800000)||((digitalRead(TimePin)==LOW&&SetTime==900000))){
       IsOn();}
-      if((digitalRead(TempPin1)==HIGH&&SetTemp!=38)||((digitalRead(TempPin2)==HIGH&&SetTemp!=34))||(((digitalRead(TempPin2)==LOW&&digitalRead(TempPin1)==LOW)&&SetTemp!=36))){
+      if((digitalRead(TempPin1)==HIGH&&SetTemp!=38)||((digitalRead(TempPin2)==HIGH&&SetTemp!=34))||(((digitalRead(TempPin1)==LOW&&digitalRead(TempPin2)==LOW)&&SetTemp!=36))){
       IsOn();}
       runTime = millis();
       Serial.print("Runtime in seconds: ");
@@ -215,31 +229,6 @@ void settingHighResolutionDuty()
   }
 }
 void loop () {
-  /*
 
-    Serial.println(i);
-    timeDisp = (SetTime - ((i) / 60));
-    if (timeDisp == 0) {
-      cumAvg = cumAvg / i;
-      display.clearDisplay();
-      display.setTextSize(3);//Set Text Size to one for the top line. This allows 2 lines of text to fit. Otherwise text size should be 2
-      display.setTextColor(WHITE);
-      display.setCursor(0, 0);
-      display.println("AvgTemp");
-      display.print(cumAvg);
-      display.print(" C");
-      display.display();
-      for (int n = 0; n < 3; n++) {
-        WarningBeep();
-      }
-      while (1) {} //remove this when no longer testing
-      PulseOff();
-    }
-    IsOk();
-    //Set resonating Frequency for MOSFET switching
-    SetFreq();
-
-
-    delay(630);*/
 }
 
