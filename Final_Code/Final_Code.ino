@@ -143,6 +143,13 @@ void WarningBeep() {
 
 
 void PulseOff() {
+          display.clearDisplay();
+        display.setTextSize(3);//Set Text Size to one for the top line. This allows 2 lines of text to fit. Otherwise text size should be 2
+        display.setTextColor(WHITE);
+        display.setCursor(0, 0);
+        display.println("Device");
+        display.print("Overheated");
+        display.display();
   while (1) {digitalWrite(relayPin, LOW);//Brings pin tied to the latch on the relay to low
   delay(20);//waits for 20 ms
   digitalWrite(relayPin, HIGH);//Brings pin tied to the relay to high, flipping the latch on the relay
