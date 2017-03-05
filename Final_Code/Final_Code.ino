@@ -4,7 +4,7 @@
 #include <project.h>
 
 //Declare variables for runtime and operating temperature
-int SetTempConst = 38,SetTemp, temptest, timeDisp, i = 0;
+int SetTempConst = 38,SetTemp, temptest, timeDisp;
 unsigned long SetTimeConst=0, SetTime=1, runTime;
 //  int SetTemp, SetTime;
 
@@ -13,11 +13,6 @@ void setup() {
   pinMode(Timer, INPUT);
   pinMode(relayPin, OUTPUT);
   pinMode(buzzPin, OUTPUT);
-  pinMode(Temp1, INPUT);
-  pinMode(Temp2, INPUT);
-  pinMode(Temp3, INPUT);
-  pinMode(Temp4, INPUT);
-  pinMode(Temp5, INPUT);
   pinMode(TempPin1, INPUT);
   pinMode(TempPin2, INPUT);
   pinMode(TimePin, INPUT);
@@ -30,6 +25,7 @@ void setup() {
 
   sensors.begin();
   IsOn();
+  //PulseOff();
   //demonstrateFrequencysEffectOnResolution();
   settingHighResolutionDuty();
 }
@@ -44,7 +40,7 @@ void IsOn() {
     SetTime = 1800000; //30 desired minutes in milliseconds
     SetTimeConst = SetTime;
   }
-  delay(1000);
+  //delay(1000);
 
   if (digitalRead(TempPin1) == HIGH) {
     SetTemp = 38; //Sets desired temp to 38C
@@ -81,7 +77,7 @@ float Temp() {
   devCountAdj=devCount;
   float temp[devCount];
   
-  for(int j=1;j<=devCount;j++){
+  for(int j=0;j<devCount;j++){
   temp[j]=sensors.getTempCByIndex(j);
   }
   //temp1 = sensors.getTempCByIndex(0);//Using sensor library read the temperature from the first sensor on the bus
@@ -99,7 +95,7 @@ float Temp() {
     Serial.println(temp4);
     Serial.print("Temperature 5 is: ");
     Serial.println(temp5);*/
-  for (int j = 1;j<=devCount;j++){
+  for (int j = 0;j<devCount;j++){
     if(temp[j]>0){
     avgTemp += temp[j];}
     else{
@@ -122,8 +118,8 @@ void Display(float tempReadout) {
   display.setTextSize(1);//Set Text Size to one for the top line. This allows 2 lines of text to fit. Otherwise text size should be 2
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
-  display.println("Running Average");
-  display.println(" C");
+  display.println("Operating Temp");
+  display.println(SetTemp);
   display.setTextSize(2);
   display.println("Temp ");
   //Serial.println(Temp());
@@ -147,11 +143,11 @@ void WarningBeep() {
 
 
 void PulseOff() {
-  digitalWrite(relayPin, LOW);//Brings pin tied to the latch on the relay to low
+  while (1) {digitalWrite(relayPin, LOW);//Brings pin tied to the latch on the relay to low
   delay(20);//waits for 20 ms
   digitalWrite(relayPin, HIGH);//Brings pin tied to the relay to high, flipping the latch on the relay
   delay(1000);
-  while (1) {};
+  };
 }
 
 /*void demonstrateFrequencysEffectOnResolution()
@@ -204,7 +200,6 @@ void settingHighResolutionDuty()
       runTime = millis();
       Serial.print("Runtime in seconds: ");
       Serial.println(runTime / 1000);
-      i = 0;
       Serial.print("Runtime in ms: ");
       Serial.println(millis() - 853);
       Serial.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
@@ -216,8 +211,8 @@ void settingHighResolutionDuty()
         display.setTextSize(3);//Set Text Size to one for the top line. This allows 2 lines of text to fit. Otherwise text size should be 2
         display.setTextColor(WHITE);
         display.setCursor(0, 0);
-        display.println("AvgTemp");
-        display.print(" C");
+        display.println("Heating");
+        display.print("Complete");
         display.display();
         for (int n = 0; n < 3; n++) {
           WarningBeep();
