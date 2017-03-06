@@ -143,15 +143,9 @@ void WarningBeep() {
 
 
 void PulseOff() {
-          display.clearDisplay();
-        display.setTextSize(3);//Set Text Size to one for the top line. This allows 2 lines of text to fit. Otherwise text size should be 2
-        display.setTextColor(WHITE);
-        display.setCursor(0, 0);
-        display.println("Device");
-        display.print("Overheated");
-        display.display();
-  while (1) {digitalWrite(relayPin, LOW);//Brings pin tied to the latch on the relay to low
-  delay(20);//waits for 20 ms
+while(1){
+  digitalWrite(relayPin, LOW);//Brings pin tied to the latch on the relay to low
+  delay(50);//waits for 20 ms
   digitalWrite(relayPin, HIGH);//Brings pin tied to the relay to high, flipping the latch on the relay
   delay(1000);
   };
@@ -200,20 +194,22 @@ void settingHighResolutionDuty()
     if (millis() % 1000 == 0) {
       Serial.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
       IsOk();
-      if((digitalRead(TimePin)==HIGH&&SetTime==1800000)||((digitalRead(TimePin)==LOW&&SetTime==900000))){
+      if((digitalRead(TimePin)==HIGH&&SetTime!=900000)||((digitalRead(TimePin)==LOW&&SetTime!=1800000))){
+      delay(100);
       IsOn();}
       if((digitalRead(TempPin1)==HIGH&&SetTemp!=38)||((digitalRead(TempPin2)==HIGH&&SetTemp!=34))||(((digitalRead(TempPin1)==LOW&&digitalRead(TempPin2)==LOW)&&SetTemp!=36))){
+      delay(250);
       IsOn();}
       runTime = millis();
       Serial.print("Runtime in seconds: ");
       Serial.println(runTime / 1000);
       Serial.print("Runtime in ms: ");
-      Serial.println(millis() - 853);
+      Serial.println(millis()-748);
       Serial.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
       timeDisp = (((SetTime / 1000) / 60) - ((runTime / 1000) / 60));//compare the time in min to the runtime in min.
 
       
-      if (timeDisp == 0){//when the timer on the device reaches zero
+      if (timeDisp <= 0){//when the timer on the device reaches zero
         display.clearDisplay();
         display.setTextSize(3);//Set Text Size to one for the top line. This allows 2 lines of text to fit. Otherwise text size should be 2
         display.setTextColor(WHITE);
@@ -222,9 +218,9 @@ void settingHighResolutionDuty()
         display.print("Complete");
         display.display();
         for (int n = 0; n < 3; n++) {
-          WarningBeep();
+          //WarningBeep();
         }
-        while (1) {} //remove this when no longer testing
+        //while (1) {} //remove this when no longer testing
         PulseOff();
        }
     }
