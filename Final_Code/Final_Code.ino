@@ -226,11 +226,12 @@ void setFreq()
 
       if (timeDisp <= 0||estop==HIGH){//when the timer on the device reaches zero
         display.clearDisplay();
-        display.setTextSize(3);//Set Text Size to one for the top line. This allows 2 lines of text to fit. Otherwise text size should be 2
+        display.setTextSize(2);//Set Text Size to one for the top line. This allows 2 lines of text to fit. Otherwise text size should be 2
         display.setTextColor(WHITE);
         display.setCursor(0, 0);
-        display.println("Heating");
-        display.print("Complete");
+        display.println();
+        display.println("    Done");
+        display.print("  Heating");
         display.display();
         for (int n = 0; n < 3; n++) {
           //warningBeep();
@@ -242,22 +243,57 @@ void setFreq()
     }
   }
 }
-void loop () {  
-      // only toggle the LED if the new Button state is HIGH
-      if (startButton() == HIGH) {
-        digitalWrite(LedPin, HIGH);
+
+void initDisplay(){
+  display.clearDisplay();
+        display.setTextSize(2);//Set Text Size to one for the top line. This allows 2 lines of text to fit. Otherwise text size should be 2
+        display.setTextColor(WHITE);
+        display.setCursor(0, 0);
+        display.println();
+        display.println("  Initial");
+        display.println("   Setup");
+        display.println("    .");
+        display.display();
+        delay(1000);
         display.clearDisplay();
         display.setTextSize(2);//Set Text Size to one for the top line. This allows 2 lines of text to fit. Otherwise text size should be 2
         display.setTextColor(WHITE);
         display.setCursor(0, 0);
-        display.println("Initial");
-        display.println("Setup");
+        display.println();
+        display.println("  Initial");
+        display.println("   Setup");
+        display.println("    ..");
         display.display();
+        delay(1000);
+        display.clearDisplay();
+        display.setTextSize(2);//Set Text Size to one for the top line. This allows 2 lines of text to fit. Otherwise text size should be 2
+        display.setTextColor(WHITE);
+        display.setCursor(0, 0);
+        display.println();
+        display.println("  Initial");
+        display.println("   Setup");
+        display.println("    ...");
+        display.display();
+        delay(1000);
+        display.display();
+}
+
+void loop () {  
+  display.clearDisplay();
+        display.setTextSize(3);//Set Text Size to one for the top line. This allows 2 lines of text to fit. Otherwise text size should be 2
+        display.setTextColor(WHITE);
+        display.setCursor(0, 0);
+                display.display();
+
+      if (startButton() == HIGH) {
+        digitalWrite(LedPin, HIGH);
+        initDisplay();
+        
         digitalWrite(RelayPin, LOW);//Brings pin tied to the latch on the relay to low
           delay(50);//waits for 20 ms
           digitalWrite(RelayPin, HIGH);//Brings pin tied to the relay to high, flipping the latch on the relay
 
-          delay(4000);
+          delay(1000);
         setFreq();
       }
 
