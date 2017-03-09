@@ -2,6 +2,7 @@
 //Heat Therapy Pseudocode
 
 #include <project.h>
+#define LedPin 41
 
 void setup() {
   delay(200);
@@ -9,6 +10,7 @@ void setup() {
   pinMode(Timer, INPUT);
   pinMode(RelayPin, OUTPUT);
   pinMode(BuzzPin, OUTPUT);
+  pinMode(LedPin, OUTPUT);
   pinMode(TempPin1, INPUT);
   pinMode(TempPin2, INPUT);
   pinMode(TimePin, INPUT);
@@ -151,7 +153,7 @@ void pulseOff() {
 //tie an IO pin with a 1k resistor to the reset pin
 //when pin is low it isnt reset
 //when pin is high the arduino resets
-
+digitalWrite(LedPin, LOW);
   digitalWrite(RelayPin, LOW);//Brings pin tied to the latch on the relay to low
   delay(50);//waits for 20 ms
   digitalWrite(RelayPin, HIGH);//Brings pin tied to the relay to high, flipping the latch on the relay
@@ -243,6 +245,7 @@ void setFreq()
 void loop () {  
       // only toggle the LED if the new Button state is HIGH
       if (startButton() == HIGH) {
+        digitalWrite(LedPin, HIGH);
         display.clearDisplay();
         display.setTextSize(2);//Set Text Size to one for the top line. This allows 2 lines of text to fit. Otherwise text size should be 2
         display.setTextColor(WHITE);
