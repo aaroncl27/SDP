@@ -162,26 +162,6 @@ digitalWrite(LedPin, LOW);
 
 }
 
-/*void demonstrateFrequencysEffectOnResolution()
-  {
-  Serial.println("As frequency increases, resolution will decrease...");
-  for (int i = 1; i < 10000; i += 10)
-  {
-    SetPinFrequency(ckt, i);  //setting the frequency
-
-    uint16_t frequency = Timer1_GetFrequency();
-    uint16_t decimalResolution = Timer1_GetTop() + 1;
-    uint16_t binaryResolution = GetPinResolution(ckt); //this number will be inaccurately low because the float is being truncated to a int
-
-    char strOut[75];
-    sprintf(strOut, "Frequency: %u Hz\r\n Number of Possible Duties: %u\r\n Resolution: %u bit\r\n", frequency, decimalResolution, binaryResolution );
-
-    Serial.println(strOut);
-  }
-
-  Serial.println("...Finished");
-  }*/
-
 void setFreq()
 {
   int k = 0;
@@ -205,7 +185,7 @@ void setFreq()
     //can be applied to the timer (up to 16 bit). 1/2 of 65536 is 32768.
     //pwmWriteHR(ckt, 32768);
     //Serial.println("High Resolution PWM");
-    //delay(1000);
+
     if (millis() % 1000 == 0) {
       Serial.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
       tempCheck();
@@ -215,7 +195,7 @@ void setFreq()
       if((digitalRead(TempPin1)==HIGH&&SetTemp!=38)||((digitalRead(TempPin2)==HIGH&&SetTemp!=34))||(((digitalRead(TempPin1)==LOW&&digitalRead(TempPin2)==LOW)&&SetTemp!=36))){
       delay(250);
       Init();}
-      runTime = millis();
+      runTime = millis()-StandbyTime;
       Serial.print("Runtime in seconds: ");
       Serial.println(runTime / 1000);
       Serial.print("Runtime in ms: ");
@@ -254,7 +234,7 @@ void initDisplay(){
         display.println("   Setup");
         display.println("    .");
         display.display();
-        delay(1000);
+        delay(1250);
         display.clearDisplay();
         display.setTextSize(2);//Set Text Size to one for the top line. This allows 2 lines of text to fit. Otherwise text size should be 2
         display.setTextColor(WHITE);
@@ -264,7 +244,7 @@ void initDisplay(){
         display.println("   Setup");
         display.println("    ..");
         display.display();
-        delay(1000);
+        delay(1250);
         display.clearDisplay();
         display.setTextSize(2);//Set Text Size to one for the top line. This allows 2 lines of text to fit. Otherwise text size should be 2
         display.setTextColor(WHITE);
@@ -274,7 +254,7 @@ void initDisplay(){
         display.println("   Setup");
         display.println("    ...");
         display.display();
-        delay(1000);
+        delay(1250);
         display.display();
 }
 
@@ -284,7 +264,7 @@ void loop () {
         display.setTextColor(WHITE);
         display.setCursor(0, 0);
                 display.display();
-
+ StandbyTime = millis();
       if (startButton() == HIGH) {
         digitalWrite(LedPin, HIGH);
         initDisplay();
@@ -293,12 +273,9 @@ void loop () {
           delay(50);//waits for 20 ms
           digitalWrite(RelayPin, HIGH);//Brings pin tied to the relay to high, flipping the latch on the relay
 
-          delay(1000);
+          delay(250);
         setFreq();
       }
-
-  // save the reading.  Next time through the loop,
-  // it'll be the lastButtonState:
 
 }
 
