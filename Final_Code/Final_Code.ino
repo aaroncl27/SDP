@@ -2,7 +2,6 @@
 //Heat Therapy Pseudocode
 
 #include <project.h>
-#define LedPin 41
 
 void setup() {
   delay(200);
@@ -148,6 +147,33 @@ bool startButton(){
     lastButtonState = reading;
   return ButtonState;
 }
+/*int debounceSwitch(int setSwitch){
+  SwitchState = 0;
+    // read the state of the switch into a local variable:
+  int reading = digitalRead(setSwitch);
+
+  // check to see if you just pressed the Button
+  // (i.e. the input went from LOW to HIGH),  and you've waited
+  // long enough since the last press to ignore any noise:
+
+  // If the switch changed, due to noise or pressing:
+  if (reading != lastButtonState) {
+    // reset the debouncing timer
+    lastDebounceTime = millis();
+  }
+
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    // whatever the reading is at, it's been there for longer
+    // than the debounce delay, so take it as the actual current state:
+
+    // if the Button state has changed:
+    if (reading != SwitchState) {
+      SwitchState = reading;
+    }
+  }
+    lastButtonState = reading;
+  return SwitchState;
+}*/
 
 void pulseOff() {
 //tie an IO pin with a 1k resistor to the reset pin
@@ -201,6 +227,7 @@ void setFreq()
       Serial.print("Runtime in ms: ");
       Serial.println(millis()-748);
       Serial.println(startButton());
+//      Serial.println(sensors.getTempCByIndex(1));
       Serial.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
       timeDisp = (((SetTime / 1000) / 60) - ((runTime / 1000) / 60));//compare the time in min to the runtime in min.
 
@@ -234,7 +261,7 @@ void initDisplay(){
         display.println("   Setup");
         display.println("    .");
         display.display();
-        delay(1250);
+        delay(1000);
         display.clearDisplay();
         display.setTextSize(2);//Set Text Size to one for the top line. This allows 2 lines of text to fit. Otherwise text size should be 2
         display.setTextColor(WHITE);
@@ -244,7 +271,7 @@ void initDisplay(){
         display.println("   Setup");
         display.println("    ..");
         display.display();
-        delay(1250);
+        delay(1000);
         display.clearDisplay();
         display.setTextSize(2);//Set Text Size to one for the top line. This allows 2 lines of text to fit. Otherwise text size should be 2
         display.setTextColor(WHITE);
@@ -254,7 +281,7 @@ void initDisplay(){
         display.println("   Setup");
         display.println("    ...");
         display.display();
-        delay(1250);
+        delay(1000);
         display.display();
 }
 
@@ -264,8 +291,8 @@ void loop () {
         display.setTextColor(WHITE);
         display.setCursor(0, 0);
                 display.display();
- StandbyTime = millis();
-      if (startButton() == HIGH) {
+ //StandbyTime = millis();
+      if (startButton() == LOW) {
         digitalWrite(LedPin, HIGH);
         initDisplay();
         
@@ -273,7 +300,7 @@ void loop () {
           delay(50);//waits for 20 ms
           digitalWrite(RelayPin, HIGH);//Brings pin tied to the relay to high, flipping the latch on the relay
 
-          delay(250);
+          delay(4000);
         setFreq();
       }
 
