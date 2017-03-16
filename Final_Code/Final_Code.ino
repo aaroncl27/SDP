@@ -2,6 +2,7 @@
 //Heat Therapy Pseudocode
 
 #include <project.h>
+#define LedPin 41
 
 void setup() {
   delay(200);
@@ -147,33 +148,6 @@ bool startButton(){
     lastButtonState = reading;
   return ButtonState;
 }
-/*int debounceSwitch(int setSwitch){
-  SwitchState = 0;
-    // read the state of the switch into a local variable:
-  int reading = digitalRead(setSwitch);
-
-  // check to see if you just pressed the Button
-  // (i.e. the input went from LOW to HIGH),  and you've waited
-  // long enough since the last press to ignore any noise:
-
-  // If the switch changed, due to noise or pressing:
-  if (reading != lastButtonState) {
-    // reset the debouncing timer
-    lastDebounceTime = millis();
-  }
-
-  if ((millis() - lastDebounceTime) > debounceDelay) {
-    // whatever the reading is at, it's been there for longer
-    // than the debounce delay, so take it as the actual current state:
-
-    // if the Button state has changed:
-    if (reading != SwitchState) {
-      SwitchState = reading;
-    }
-  }
-    lastButtonState = reading;
-  return SwitchState;
-}*/
 
 void pulseOff() {
 //tie an IO pin with a 1k resistor to the reset pin
@@ -183,10 +157,26 @@ digitalWrite(LedPin, LOW);
   digitalWrite(RelayPin, LOW);//Brings pin tied to the latch on the relay to low
   delay(50);//waits for 20 ms
   digitalWrite(RelayPin, HIGH);//Brings pin tied to the relay to high, flipping the latch on the relay
-  delay(3000);
+  delay(5000);
     resetFunc();
 
 }
+
+/*void demonstrateFrequencysEffectOnResolution()
+  {
+  Serial.println("As frequency increases, resolution will decrease...");
+  for (int i = 1; i < 10000; i += 10)
+  {
+    SetPinFrequency(ckt, i);  //setting the frequency
+    uint16_t frequency = Timer1_GetFrequency();
+    uint16_t decimalResolution = Timer1_GetTop() + 1;
+    uint16_t binaryResolution = GetPinResolution(ckt); //this number will be inaccurately low because the float is being truncated to a int
+    char strOut[75];
+    sprintf(strOut, "Frequency: %u Hz\r\n Number of Possible Duties: %u\r\n Resolution: %u bit\r\n", frequency, decimalResolution, binaryResolution );
+    Serial.println(strOut);
+  }
+  Serial.println("...Finished");
+  }*/
 
 void setFreq()
 {
@@ -211,7 +201,7 @@ void setFreq()
     //can be applied to the timer (up to 16 bit). 1/2 of 65536 is 32768.
     //pwmWriteHR(ckt, 32768);
     //Serial.println("High Resolution PWM");
-
+    //delay(1000);
     if (millis() % 1000 == 0) {
       Serial.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
       tempCheck();
@@ -227,7 +217,6 @@ void setFreq()
       Serial.print("Runtime in ms: ");
       Serial.println(millis()-748);
       Serial.println(startButton());
-//      Serial.println(sensors.getTempCByIndex(1));
       Serial.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
       timeDisp = (((SetTime / 1000) / 60) - ((runTime / 1000) / 60));//compare the time in min to the runtime in min.
 
@@ -291,8 +280,8 @@ void loop () {
         display.setTextColor(WHITE);
         display.setCursor(0, 0);
                 display.display();
- //StandbyTime = millis();
-      if (startButton() == LOW) {
+ StandbyTime = millis();
+      if (startButton() == HIGH) {
         digitalWrite(LedPin, HIGH);
         initDisplay();
         
@@ -300,9 +289,11 @@ void loop () {
           delay(50);//waits for 20 ms
           digitalWrite(RelayPin, HIGH);//Brings pin tied to the relay to high, flipping the latch on the relay
 
-          delay(4000);
+          delay(1500);
         setFreq();
       }
 
-}
+  // save the reading.  Next time through the loop,
+  // it'll be the lastButtonState:
 
+}
