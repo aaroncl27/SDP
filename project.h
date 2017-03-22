@@ -19,7 +19,9 @@
 #define TempPin2 28// assign pin 13 to Medium Temp
 #define TempPin1 32 // assign pin 12 to High Temp
 #define RelayPin 31
-#define Button 51
+#define CoilRelayPin 33
+#define LedPin 41
+#define Button 53
 
 Adafruit_SSD1306 display(OLED_RESET);
 
@@ -33,13 +35,14 @@ DallasTemperature sensors(&oneWire);
 
 //Declare variables for runtime and operating temperature
 int SetTempConst = 38,SetTemp, temptest, timeDisp;
-unsigned long SetTimeConst=0, SetTime=1, runTime;
+unsigned long SetTimeConst=0, SetTime=1, runTime, StandbyTime;
+bool RelayState=FALSE;
 //  int SetTemp, SetTime;
 // Variables will change:
 int ButtonState;             // the current reading from the input pin
 int lastButtonState = LOW;   // the previous reading from the input pin
 unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
-unsigned long debounceDelay = 200;    // the debounce time; increase if the output
+unsigned long debounceDelay = 50;    // the debounce time; increase if the output
 
 
 
